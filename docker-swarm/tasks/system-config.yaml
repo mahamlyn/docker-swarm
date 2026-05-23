@@ -73,7 +73,7 @@
     # Create a user for docker swarm management
     - name: System Managment | Create Docker Swarm Admin User
       ansible.builtin.user:
-        name: dockeradmin
+        name: {{ docker_admin_user }}
         comment: Docker Swarm Admin User
         shell: /bin/bash
         groups: sudo
