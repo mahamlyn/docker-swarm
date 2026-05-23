@@ -68,3 +68,13 @@
     - name: Services | Stop ssh Service
       ansible.builtin.command:
         cmd: systemctl start sshd
+
+#--------------------- USER CREATION --------------------
+    # Create a user for docker swarm management
+    - name: System Managment | Create Docker Swarm Admin User
+      ansible.builtin.user:
+        name: dockeradmin
+        comment: Docker Swarm Admin User
+        shell: /bin/bash
+        groups: sudo
+        create_home: yes
