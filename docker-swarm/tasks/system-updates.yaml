@@ -1,0 +1,31 @@
+---
+# Ubuntu Server Updates - This task will update the package cache, install any available updates, and then check if a reboot is required. If a reboot is required, it will be initiated by Ansible.
+
+#--------------------- UPDATE APT PACKAGES --------------------
+- name: Package | check for new packages & update as required
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: yes
+  register: aptout
+
+- debug:
+    msg: "{{ aptout.stdout_lines }}"
+  when: aptout.stdout_lines is defined
+
+#--------------------- CHECK FOR REBOOT REQUIREMENT --------------------
+- name: Reboot | Check if a reboot is required.
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+    get_checksum: no
+  register: reboot_required_file
+
+#--------------------- REBOOT IF REQUIRED --------------------
+- name: Reboot | Reboot if previous flag is true
+  reboot:
+    msg: "Reboot initiated by Ansible Patching Routines"
+  when: reboot_required_file.stat.exists == true
+
+#--------------------- CLEAR OUT DEPENDENCIES --------------------
+- name: Package | Remove dependencies - apt
+  ansible.builtin.apt:
+    autoremove: yes

@@ -1,0 +1,1 @@
+ansible-playbook ./main.yml -i ./inventory/inventory.ini -u localadmin --ask-pass --ask-become-pass
